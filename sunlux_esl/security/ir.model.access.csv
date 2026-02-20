@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sunlux_esl_log_user,sunlux.esl.log user,model_sunlux_esl_log,base.group_user,1,0,0,0
+access_sunlux_esl_log_admin,sunlux.esl.log admin,model_sunlux_esl_log,base.group_system,1,1,1,1
+access_sunlux_esl_api_user,sunlux.esl.api user,model_sunlux_esl_api,base.group_user,1,0,0,0

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add ESL fields to product form (General Information page) -->
+    <record id="product_template_form_view_sunlux" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sunlux.esl</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Original Price (ESL) right after Sales Price -->
+            <xpath expr="//page[@name='general_information']//div[@name='list_price_uom']"
+                   position="after">
+                <field name="sunlux_original_price"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id', 'field_digits': True}"
+                       invisible="not sunlux_esl_sync_enabled"/>
+            </xpath>
+
+            <!-- SUNLUX ESL control group -->
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="SUNLUX ESL" name="sunlux_esl_group">
+                    <group>
+                        <field name="sunlux_esl_sync_enabled"/>
+                        <field name="sunlux_goods_id"
+                               invisible="not sunlux_goods_id"/>
+                        <field name="sunlux_last_sync"
+                               invisible="not sunlux_last_sync"/>
+                    </group>
+                    <group>
+                        <button name="action_sunlux_sync_now"
+                                string="Sync to ESL Now"
+                                type="object"
+                                class="btn btn-primary"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Bulk sync server action (appears in Action menu on list view) -->
+    <record id="action_sunlux_bulk_sync" model="ir.actions.server">
+        <field name="name">Sync to SUNLUX ESL</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_sunlux_bulk_sync()
+        </field>
+    </record>
+
+</odoo>
