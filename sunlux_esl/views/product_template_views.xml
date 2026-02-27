@@ -7,33 +7,35 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <!-- Original Price (ESL) right after Sales Price -->
-            <xpath expr="//page[@name='general_information']//div[@name='list_price_uom']"
-                   position="after">
-                <field name="sunlux_original_price"
-                       widget="monetary"
-                       options="{'currency_field': 'currency_id', 'field_digits': True}"
-                       invisible="not sunlux_esl_sync_enabled"/>
-            </xpath>
+            <data>
+                <!-- Original Price (ESL) right after Sales Price in General Information -->
+                <xpath expr="//page[@name='general_information']//div[@name='list_price_uom']"
+                       position="after">
+                    <field name="sunlux_original_price"
+                           widget="monetary"
+                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                           invisible="not sunlux_esl_sync_enabled"/>
+                </xpath>
 
-            <!-- SUNLUX ESL control group -->
-            <xpath expr="//page[@name='general_information']" position="inside">
-                <group string="SUNLUX ESL" name="sunlux_esl_group">
-                    <group>
-                        <field name="sunlux_esl_sync_enabled"/>
-                        <field name="sunlux_goods_id"
-                               invisible="not sunlux_goods_id"/>
-                        <field name="sunlux_last_sync"
-                               invisible="not sunlux_last_sync"/>
+                <!-- SUNLUX ESL control group at the bottom of General Information -->
+                <xpath expr="//page[@name='general_information']" position="inside">
+                    <group string="SUNLUX ESL" name="sunlux_esl_group">
+                        <group>
+                            <field name="sunlux_esl_sync_enabled"/>
+                            <field name="sunlux_goods_id"
+                                   invisible="not sunlux_goods_id"/>
+                            <field name="sunlux_last_sync"
+                                   invisible="not sunlux_last_sync"/>
+                        </group>
+                        <group>
+                            <button name="action_sunlux_sync_now"
+                                    string="Sync to ESL Now"
+                                    type="object"
+                                    class="btn btn-primary"/>
+                        </group>
                     </group>
-                    <group>
-                        <button name="action_sunlux_sync_now"
-                                string="Sync to ESL Now"
-                                type="object"
-                                class="btn btn-primary"/>
-                    </group>
-                </group>
-            </xpath>
+                </xpath>
+            </data>
         </field>
     </record>
 
