@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_sunlux_esl_log_tree" model="ir.ui.view">
+        <field name="name">sunlux.esl.log.list</field>
+        <field name="model">sunlux.esl.log</field>
+        <field name="arch" type="xml">
+            <list string="SUNLUX ESL Logs" create="false" edit="false"
+                  decoration-danger="status == 'error'"
+                  decoration-warning="status == 'warning'"
+                  decoration-success="status == 'success'">
+                <field name="create_date" string="Time"/>
+                <field name="operation"/>
+                <field name="product_name"/>
+                <field name="endpoint" optional="hide"/>
+                <field name="response_code" string="Code"/>
+                <field name="status" widget="badge"
+                       decoration-danger="status == 'error'"
+                       decoration-warning="status == 'warning'"
+                       decoration-success="status == 'success'"/>
+                <field name="duration_ms" string="ms" optional="hide"/>
+                <field name="error_message" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_sunlux_esl_log_form" model="ir.ui.view">
+        <field name="name">sunlux.esl.log.form</field>
+        <field name="model">sunlux.esl.log</field>
+        <field name="arch" type="xml">
+            <form string="ESL Log Entry" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="Timestamp"/>
+                            <field name="operation"/>
+                            <field name="status" widget="badge"/>
+                            <field name="duration_ms" string="Duration (ms)"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="product_name" invisible="product_id"/>
+                            <field name="endpoint"/>
+                            <field name="response_code"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Request" name="request" invisible="not request_data">
+                            <field name="request_data" nolabel="1"/>
+                        </page>
+                        <page string="Response" name="response" invisible="not response_data">
+                            <field name="response_data" nolabel="1"/>
+                        </page>
+                        <page string="Error" name="error" invisible="not error_message">
+                            <field name="error_message" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_sunlux_esl_log_search" model="ir.ui.view">
+        <field name="name">sunlux.esl.log.search</field>
+        <field name="model">sunlux.esl.log</field>
+        <field name="arch" type="xml">
+            <search string="Search ESL Logs">
+                <field name="product_name"/>
+                <field name="operation"/>
+                <field name="error_message"/>
+                <filter string="Errors" name="filter_error"
+                        domain="[('status', '=', 'error')]"/>
+                <filter string="Success" name="filter_success"
+                        domain="[('status', '=', 'success')]"/>
+                <separator/>
+                <filter string="Date" name="filter_date" date="create_date"/>
+                <group>
+                    <filter string="Operation" name="group_operation"
+                            context="{'group_by': 'operation'}"/>
+                    <filter string="Status" name="group_status"
+                            context="{'group_by': 'status'}"/>
+                    <filter string="Date" name="group_date"
+                            context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sunlux_esl_log" model="ir.actions.act_window">
+        <field name="name">Tag Display Logs</field>
+        <field name="res_model">sunlux.esl.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No sync logs yet</p>
+            <p>Logs appear here when products are synced to SUNLUX ESL.</p>
+        </field>
+    </record>
+
+    <!-- Menu under Point of Sale -->
+    <menuitem id="menu_sunlux_esl_root"
+              name="Tag Display"
+              parent="point_of_sale.menu_point_root"
+              sequence="99"/>
+
+    <menuitem id="menu_sunlux_esl_logs"
+              name="Sync Logs"
+              parent="menu_sunlux_esl_root"
+              action="action_sunlux_esl_log"
+              sequence="10"/>
+
+</odoo>

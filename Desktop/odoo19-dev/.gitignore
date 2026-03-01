@@ -1,0 +1,28 @@
+# Odoo core and virtualenv — not part of this project
+odoo/
+odoo-venv/
+
+# Config and logs
+odoo.conf
+*.log
+nul
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Odoo compiled assets
+**/static/description/index.html
+
+# Reference docs and test data — share separately
+*.pdf
+*.xlsx
+*.xls
+*.csv
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp

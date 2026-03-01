@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add ESL fields to product form (General Information page) -->
+    <record id="product_template_form_view_sunlux" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sunlux.esl</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <!-- Original Price (ESL) right after Sales Price field -->
+                <xpath expr="//page[@name='general_information']//field[@name='list_price']"
+                       position="after">
+                    <field name="sunlux_original_price"
+                           widget="monetary"
+                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                           invisible="not sunlux_esl_sync_enabled"/>
+                </xpath>
+
+                <!-- Tag Display control group at the bottom of General Information -->
+                <xpath expr="//page[@name='general_information']" position="inside">
+                    <group string="Tag Display" name="sunlux_esl_group">
+                        <group>
+                            <field name="sunlux_esl_sync_enabled"/>
+                            <field name="sunlux_tag_status" invisible="not sunlux_esl_sync_enabled">
+                                <span class="badge rounded-pill text-bg-success"
+                                      invisible="sunlux_tag_status != 'bound'">Tag Bound</span>
+                                <span class="badge rounded-pill text-bg-warning"
+                                      invisible="sunlux_tag_status != 'waiting'">Waiting for Tag</span>
+                                <span class="badge rounded-pill text-bg-secondary"
+                                      invisible="sunlux_tag_status != 'not_synced'">Not Synced</span>
+                            </field>
+                            <field name="sunlux_preferred_tag_size"
+                                   readonly="1"
+                                   invisible="not sunlux_preferred_tag_size"/>
+                            <field name="sunlux_goods_id"
+                                   invisible="not sunlux_goods_id"/>
+                            <field name="sunlux_tag_id"
+                                   invisible="not sunlux_tag_id"/>
+                            <field name="sunlux_last_sync"
+                                   invisible="not sunlux_last_sync"/>
+                        </group>
+                        <group>
+                            <button name="action_sunlux_sync_now"
+                                    string="Sync to ESL Now"
+                                    type="object"
+                                    class="btn btn-primary"
+                                    invisible="not sunlux_esl_sync_enabled"/>
+                            <button name="action_open_reassign_wizard"
+                                    string="Change Tag Size"
+                                    type="object"
+                                    class="btn btn-warning"
+                                    invisible="not sunlux_esl_sync_enabled"/>
+                        </group>
+                    </group>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <!-- Bulk barcode generation server action (appears in Action menu on list view) -->
+    <record id="action_sunlux_generate_barcodes" model="ir.actions.server">
+        <field name="name">Generate EAN-13 Barcodes</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_sunlux_generate_barcodes()
+        </field>
+    </record>
+
+    <!-- Bulk sync server action (appears in Action menu on list view) -->
+    <record id="action_sunlux_bulk_sync" model="ir.actions.server">
+        <field name="name">Sync to Tag Display</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_sunlux_bulk_sync()
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sunlux_esl_reassign_wizard_form" model="ir.ui.view">
+        <field name="name">sunlux.esl.reassign.wizard.form</field>
+        <field name="model">sunlux.esl.reassign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change Tag Size">
+                <field name="product_id" invisible="1"/>
+                <field name="tag_to_reassign_id" invisible="1"/>
+                <field name="current_owner_id" invisible="1"/>
+                <field name="has_conflict" invisible="1"/>
+
+                <group>
+                    <field name="requested_size" string="Select Tag Size"/>
+                </group>
+
+                <!-- Shown only when conflict exists -->
+                <div class="alert alert-warning" role="alert"
+                     invisible="not has_conflict">
+                    <strong>Tag Size Already Occupied</strong>
+                </div>
+                <field name="conflict_summary"
+                       readonly="1"
+                       widget="text"
+                       invisible="not has_conflict"
+                       style="min-height:120px;"/>
+
+                <footer>
+                    <!-- No conflict: simple Assign button -->
+                    <button name="action_assign"
+                            string="Assign Tag"
+                            type="object"
+                            class="btn-primary"
+                            invisible="has_conflict"
+                            data-hotkey="v"/>
+
+                    <!-- Conflict: Yes / No buttons -->
+                    <button name="action_confirm_reassign"
+                            string="Yes, Reassign Tag to This Product"
+                            type="object"
+                            class="btn-danger"
+                            invisible="not has_conflict"
+                            data-hotkey="v"/>
+                    <button name="action_cancel"
+                            string="No, Keep Existing Assignment"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not has_conflict"
+                            data-hotkey="z"/>
+
+                    <!-- Cancel when no conflict -->
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="has_conflict"
+                            data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sunlux_esl_reassign_wizard" model="ir.actions.act_window">
+        <field name="name">ESL Tag Reassignment</field>
+        <field name="res_model">sunlux.esl.reassign.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_sunlux_esl_reassign_wizard_form"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="sunlux_esl_tag_tree" model="ir.ui.view">
+        <field name="name">sunlux.esl.tag.tree</field>
+        <field name="model">sunlux.esl.tag</field>
+        <field name="arch" type="xml">
+            <list decoration-success="status == '0'"
+                  decoration-muted="status == '1'">
+                <field name="tag_code"/>
+                <field name="tag_size"/>
+                <field name="resolution_desc"/>
+                <field name="station_name"/>
+                <field name="template_name"/>
+                <field name="current_goods_name"/>
+                <field name="product_id"/>
+                <field name="status"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="sunlux_esl_tag_form" model="ir.ui.view">
+        <field name="name">sunlux.esl.tag.form</field>
+        <field name="model">sunlux.esl.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_bind_to_product"
+                            string="Bind to Product Now"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not product_id"/>
+                </header>
+                <sheet>
+                    <group string="Tag Info">
+                        <group>
+                            <field name="tag_code"/>
+                            <field name="tag_id"/>
+                            <field name="tag_size"/>
+                            <field name="resolution_desc"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="station_name"/>
+                            <field name="station_id"/>
+                            <field name="template_name"/>
+                            <field name="template_id"/>
+                            <field name="bind_mode"/>
+                        </group>
+                    </group>
+                    <group string="Assignment">
+                        <group>
+                            <field name="product_id"/>
+                            <field name="current_goods_id"/>
+                            <field name="current_goods_name"/>
+                        </group>
+                        <group>
+                            <field name="last_sync"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="sunlux_esl_tag_search" model="ir.ui.view">
+        <field name="name">sunlux.esl.tag.search</field>
+        <field name="model">sunlux.esl.tag</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="tag_code"/>
+                <field name="product_id"/>
+                <field name="station_name"/>
+                <filter string="Online" name="online" domain="[('status','=','0')]"/>
+                <filter string="Offline" name="offline" domain="[('status','=','1')]"/>
+                <filter string="Unassigned" name="free"
+                        domain="[('product_id','=',False)]"/>
+                <filter string="Assigned" name="assigned"
+                        domain="[('product_id','!=',False)]"/>
+                <separator/>
+                <filter string="Group by Status" name="by_status"
+                        context="{'group_by':'status'}"/>
+                <filter string="Group by Station" name="by_station"
+                        context="{'group_by':'station_name'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sunlux_esl_tag" model="ir.actions.act_window">
+        <field name="name">ESL Price Tags</field>
+        <field name="res_model">sunlux.esl.tag</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tags yet — click "Fetch Tags from SUNLUX" in Settings.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="menu_sunlux_esl_root"
+              name="Tag Display"
+              parent="point_of_sale.menu_point_root"
+              sequence="99"/>
+
+    <menuitem id="menu_sunlux_esl_tags"
+              name="Price Tags"
+              parent="menu_sunlux_esl_root"
+              action="action_sunlux_esl_tag"
+              sequence="10"/>
+
+    <menuitem id="menu_sunlux_esl_logs"
+              name="Sync Logs"
+              parent="menu_sunlux_esl_root"
+              action="action_sunlux_esl_log"
+              sequence="20"/>
+
+</odoo>

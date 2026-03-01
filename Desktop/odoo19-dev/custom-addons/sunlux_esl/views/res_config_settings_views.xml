@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_sunlux" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.sunlux.esl</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='point_of_sale']//div[hasclass('pos_config_content')]" position="inside">
+                <block title="Tag Display" id="sunlux_esl_section">
+                    <setting string="ESL API Credentials"
+                             help="Connect Odoo to SUNLUX Electronic Shelf Labels">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="sunlux_base_url" class="col-lg-3 o_light_label"/>
+                                <field name="sunlux_base_url"
+                                       placeholder="https://api.sunlux.com"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="sunlux_uid" class="col-lg-3 o_light_label"/>
+                                <field name="sunlux_uid"
+                                       placeholder="32-char Merchant UID"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="sunlux_sid" class="col-lg-3 o_light_label"/>
+                                <field name="sunlux_sid"
+                                       placeholder="32-char Platform SID"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="sunlux_key" class="col-lg-3 o_light_label"/>
+                                <field name="sunlux_key" password="True"
+                                       placeholder="Secret key for MD5 signature"/>
+                            </div>
+
+                            <div class="row mt16">
+                                <div class="col-12">
+                                    <button name="action_sunlux_test_connection"
+                                            string="Test Connection"
+                                            type="object"
+                                            class="btn btn-primary"/>
+                                    <button name="action_sunlux_clear_token"
+                                            string="Clear Token Cache"
+                                            type="object"
+                                            class="btn btn-secondary ms-2"/>
+                                    <button name="action_sunlux_fetch_tags"
+                                            string="Fetch Tags from SUNLUX"
+                                            type="object"
+                                            class="btn btn-secondary ms-2"/>
+                                </div>
+                            </div>
+
+                            <div class="row mt16">
+                                <div class="col-lg-3 o_light_label">Token Status</div>
+                                <div class="col-lg-9 text-muted">
+                                    <field name="sunlux_token_preview" readonly="1"
+                                           class="oe_inline"/>
+                                    <span class="ms-3">Expires:</span>
+                                    <field name="sunlux_token_expires" readonly="1"
+                                           class="oe_inline"/>
+                                </div>
+                            </div>
+
+                            <div class="row mt8">
+                                <div class="col-12">
+                                    <button name="%(sunlux_esl.action_sunlux_esl_log)d"
+                                            string="View Sync Logs"
+                                            type="action"
+                                            class="btn-link"
+                                            icon="oi-arrow-right"/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
