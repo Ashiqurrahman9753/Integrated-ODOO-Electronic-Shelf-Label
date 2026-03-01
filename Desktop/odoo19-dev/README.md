@@ -1,25 +1,14 @@
 # SUNLUX ESL — Odoo 19 Integration
 
-Custom Odoo 19 addon that syncs product data (name, price, barcode) to SUNLUX Electronic Shelf Label displays via their REST API.
+Odoo 19 addon that syncs product data to SUNLUX Electronic Shelf Label displays.
 
 ---
 
-## What's in this repo
-
-```
-custom-addons/sunlux_esl/   ← the only thing you need to touch
-```
-
-Odoo core, the virtualenv, config, and logs are **not committed** — you set those up yourself (see below).
-
----
-
-## Prerequisites
+## What you need
 
 - Python 3.10+
 - PostgreSQL 14+
-- Odoo 19 source (clone separately from [odoo/odoo](https://github.com/odoo/odoo))
-- `pip install requests`
+- Odoo 19 source
 
 ---
 
@@ -28,8 +17,8 @@ Odoo core, the virtualenv, config, and logs are **not committed** — you set th
 **1. Clone this repo**
 
 ```bash
-git clone https://github.com/Ashiqurrahman9753/Portfolio-ashiqur-rahman.git
-cd Portfolio-ashiqur-rahman
+git clone https://github.com/Ashiqurrahman9753/Integrated-ODOO-Electronic-Shelf-Label.git
+cd Integrated-ODOO-Electronic-Shelf-Label
 ```
 
 **2. Get Odoo 19**
@@ -37,27 +26,21 @@ cd Portfolio-ashiqur-rahman
 ```bash
 git clone --depth=1 --branch 19.0 https://github.com/odoo/odoo.git
 python -m venv odoo-venv
-odoo-venv/Scripts/activate      # Windows
-# or: source odoo-venv/bin/activate   # Linux/Mac
+source odoo-venv/bin/activate        # Linux/Mac
+# odoo-venv\Scripts\activate         # Windows
 pip install -r odoo/requirements.txt
 pip install requests
 ```
 
 **3. Create the database**
 
-A sanitized database dump is shared separately (ask the project owner).
-Restore it:
+Start fresh — Odoo will set up the schema on first run.
 
 ```bash
 createdb your-db-name
-pg_restore -d your-db-name path/to/test-pos.dump
 ```
 
-Or start fresh — Odoo will create the schema on first run.
-
-**4. Configure Odoo**
-
-Create `odoo.conf` in the project root:
+**4. Create odoo.conf**
 
 ```ini
 [options]
@@ -73,42 +56,30 @@ http_port = 8069
 **5. Run**
 
 ```bash
-odoo-venv/Scripts/python odoo/odoo-bin -c odoo.conf
+python odoo/odoo-bin -c odoo.conf
 ```
 
-Open `http://localhost:8069`, log in, go to **Apps → Update Apps List**, search for **SUNLUX ESL**, and install.
+Go to `http://localhost:8069`, log in, then **Apps → Update Apps List → search SUNLUX ESL → Install**.
 
 ---
 
-## SUNLUX API credentials
+## SUNLUX credentials
 
-After install, go to **Settings → Point of Sale → Tag Display** and enter:
+Go to **Settings → Point of Sale → Tag Display** and fill in:
 
-| Field | Description |
-|---|---|
-| Base URL | `https://your-sunlux-server` |
-| Merchant UID | provided by SUNLUX |
-| Platform SID | provided by SUNLUX |
-| Secret Key | provided by SUNLUX |
+- Base URL
+- Merchant UID
+- Platform SID
+- Secret Key
 
-Hit **Test Connection** — you should get a green notification.
+*(credentials shared separately by the project owner)*
 
----
-
-## Database dump note
-
-The shared dump (`test-pos.dump`) contains live product and tag data from the development setup.
-Credentials stored in `ir_config_parameter` have been cleared before export — you'll need to re-enter them in Settings after restore.
+Click **Test Connection** — should show a green success message.
 
 ---
 
-## Module overview
+## After setup
 
-| File | Purpose |
-|---|---|
-| `models/product_template.py` | ESL fields on products, auto-sync on price/name change |
-| `models/api_client.py` | HTTP client for SUNLUX REST API |
-| `models/tag.py` | Local mirror of physical ESL tags |
-| `models/api_log.py` | API call log model |
-| `models/res_config_settings.py` | Credentials UI in Settings |
-| `models/tag_reassign_wizard.py` | Wizard for reassigning tags between products |
+- Go to **Point of Sale → ESL Tags → Fetch Tags** to pull in physical tags from the SUNLUX base station
+- On any product, enable **Sync to ESL** and hit **Sync Now**
+- Price/name changes auto-sync in the background
